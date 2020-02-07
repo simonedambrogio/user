@@ -30,5 +30,5 @@ simdat <- data.frame(c(rep("Group1", times = n),
 colnames(simdat) <- c("group", "score")
 
 # Calculate summary stats ----
-summary_simdat <- summarySE(simdat, measurevar = "score", 
+summary_simdat <- Rmisc::summarySE(simdat, measurevar = "score", 
                                      groupvars = c("group"))
