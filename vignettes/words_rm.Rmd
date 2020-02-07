@@ -1,0 +1,98 @@
+---
+title: "words_rm function"
+author: "Simone D'Ambrogio"
+date: "24/1/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+## words_rm
+If a variable is composed by numbers and letters, it will be converted by R in factor (or character). However, sometimes this make us deal with meaningless variables. 
+
+We ran into a case like this yesterday, whith the "Age" variable that conteined numbers and ... words.
+The first and more psychological question is: what's the problem with these guys?? A second question, this time more technical and maybe more boring is: how can we solve this problem efficiently and in a way that minimize the probability of error? In my opinion, put the hands directly on the excel file doesn't satisfy neither of the two criteria.
+
+Trying to solve this problem, yesterday I created a small function that hopefully may come in handy.
+
+```{r cars}
+## Open the dataset
+
+#setwd(...)
+sa <- read.csv(file = "JDMLab_Scarcity Ambientale .csv")
+str(sa$Age)
+#As we can see, the Age variable is a factor and cannot be converted to numbers as long as 
+#there are letters
+```
+
+```{r}
+#Convert the Age variable in character
+sa$Age <- as.character(sa$Age)
+
+library(tidyverse)
+#Detect the values that in the Age variable that contain letters. 
+#Our goal is to keep the in numbers and discard the letters
+unique(unlist(sapply(c(letters,LETTERS), function(i) sa$Age[str_detect(sa$Age, i)])))
+```
+
+## words_rm function
+
+```{r}
+#This is the function
+words_rm <- function(data, variable, words_to_rm, replace = ""){
+  
+  library(tidyverse)
+  
+  if(!require(tidyverse)){
+    install.packages("tidyverse")
+    library(tidyverse)
+  }
+  
+  if(!is.character(data[, variable])) stop("The arg variable must be a character!")
+  
+    new_number <- sapply(1:length(data[, variable][str_detect(data[, variable], words_to_rm)]), 
+                       function(i){
+                         data[, variable][str_detect(data[, variable], words_to_rm)][i] <- 
+                           gsub(words_to_rm, replace, data[, variable][str_detect(data[, variable], words_to_rm)][i])
+                       })
+  
+  data[str_detect(data[, variable], words_to_rm),variable] <- new_number
+  return(data[, variable])
+}
+```
+
+See how the function works in pracice
+
+```{r pressure, echo=FALSE}
+#The words_rm function eliminates the worlds that we want to eliminate
+#There are only 4 arguments:
+#data: name of the dataset
+#variable: character variable that we want to modify. don't forget the quotation marks
+#words_to_rm: words that we want to eliminate separated by |
+#replace: numbers or words we want instead of words_rm. Default is "" and you should 
+#keep it if you want to eliminate the words
+
+sa$Age <- words_rm(data=sa, variable="Age", words_to_rm = "anni|anno")
+
+#Detect again the values that in the Age variable that contain letters. 
+unique(unlist(sapply(c(letters,LETTERS), function(i) sa$Age[str_detect(sa$Age, i)])))
+
+#The values containing words are now redused from 12 to 3. 
+```
+
+
+
+```{r}
+#If we want to convert the one who answered Sessantaqattro instead of 64, we
+#can use the argument replace as below
+sa$Age <- words_rm(data=sa, variable='Age', words_to_rm = "Sessantaquattro", replace = "64")
+
+#Detect again the values that in the Age variable that contain letters. 
+unique(unlist(sapply(c(letters,LETTERS), function(i) sa$Age[str_detect(sa$Age, i)])))
+```
+
+I hope you find it useful. If you find bugs or if you have question or curiosities, please contact me :)
+
+Simone
