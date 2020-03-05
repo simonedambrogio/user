@@ -1,4 +1,3 @@
-#Trasforma i tril in trial consecutivi 
 trials <- function(data) {
   
   if( sum(names(data) %in% c("subject", "trial")) < 2 ){ "The dataset must contain the variables subject and trial"}
