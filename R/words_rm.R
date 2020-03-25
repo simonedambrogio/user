@@ -35,4 +35,4 @@ words_rm <- function (data, variable, words_to_rm, replace = "") {
 
 
 
-#words_rm(data = dec, variable = "value_up_boundary", words_to_rm = "\\+")
+#words_rm(data = dec, variable = value_up_boundary, words_to_rm = "\\+")
