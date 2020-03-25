@@ -30,7 +30,7 @@ words_rm <- function (data, variable, words_to_rm, replace = "") {
     #[word_to_rm_logic, variable] <- new_words 
   }
   
-  return(select(data, Image_L) %>% .[, ])
+  return(select(data, variable) %>% .[, ])
 }
 
 
