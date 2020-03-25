@@ -14,24 +14,21 @@ words_rm <- function (data, variable, words_to_rm, replace = "") {
     library(tidyverse)
   }
   
-  variable <- select(data, Image_L) %>% .[, ]
   
-  #Parola da rimuovere
-  for( word_i in 1:length(words_to_rm) ){
-    
-    word_to_rm_logic <- str_detect( variable, words_to_rm[word_i])
+  variable <- enquo(variable)
+  var <- select(data, !!variable) %>% .[,]
+  
+  for (word_i in 1:length(words_to_rm)) {
+    word_to_rm_logic <- str_detect(var, words_to_rm[word_i])
     word_to_rm <- words_to_rm[word_i]
-    
-    new_words <- sapply(1:sum(word_to_rm_logic), 
-                        function(i) variable[word_to_rm_logic][i] <- gsub(word_to_rm, replace, variable[word_to_rm_logic][i])
-    )
-    
-    data <- mutate(data, variable = ifelse(word_to_rm_logic, new_words, variable))
-    #[word_to_rm_logic, variable] <- new_words 
+    new_words <- sapply(1:sum(word_to_rm_logic), function(i) var[word_to_rm_logic][i] <- gsub(word_to_rm, 
+                                                                                              replace, var[word_to_rm_logic][i]))
+    data <- mutate(data, var = ifelse(word_to_rm_logic, new_words, var)) 
   }
   
-  return(select(data, variable) %>% .[, ])
+  return(select(data, var) %>% .[,])
 }
+
 
 
 
