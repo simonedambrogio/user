@@ -6,25 +6,33 @@
 #replace: numbers or words we want instead of words_rm. Default is "" and you should 
 #keep it if you want to eliminate the words
 
-words_rm <- function(variable, words_to_rm, replace = ""){
-
-library(tidyverse)
-
-if(!require(tidyverse)){
-  install.packages("tidyverse")
+words_rm <- function (data, variable, words_to_rm, replace = "") {
+  
   library(tidyverse)
+  if (!require(tidyverse)) {
+    install.packages("tidyverse")
+    library(tidyverse)
+  }
+  
+  variable <- select(data, Image_L) %>% .[, ]
+  
+  #Parola da rimuovere
+  for( word_i in 1:length(words_to_rm) ){
+    
+    word_to_rm_logic <- str_detect( variable, words_to_rm[word_i])
+    word_to_rm <- words_to_rm[word_i]
+    
+    new_words <- sapply(1:sum(word_to_rm_logic), 
+                        function(i) variable[word_to_rm_logic][i] <- gsub(word_to_rm, replace, variable[word_to_rm_logic][i])
+    )
+    
+    data <- mutate(data, variable = ifelse(word_to_rm_logic, new_words, variable))
+    #[word_to_rm_logic, variable] <- new_words 
+  }
+  
+  return(select(data, Image_L) %>% .[, ])
 }
 
-if(!is.character(data[, variable])) stop("The arg variable must be a character!")
 
-new_number <- sapply(1:length(data[, variable][str_detect(data[, variable], words_to_rm)]), 
-                     function(i){
-                       data[, variable][str_detect(data[, variable], words_to_rm)][i] <- 
-                         gsub(words_to_rm, replace, data[, variable][str_detect(data[, variable], words_to_rm)][i])
-                     })
-
-data[str_detect(data[, variable], words_to_rm),variable] <- new_number
-return(data[, variable])
-}
 
 #words_rm(data = dec, variable = "value_up_boundary", words_to_rm = "\\+")
