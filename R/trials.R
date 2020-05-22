@@ -1,15 +1,7 @@
-trials <- function(data) {
-  
-  if( sum(names(data) %in% c("subject", "trial")) < 2 ){ "The dataset must contain the variables subject and trial"}
-  
-  #total number of trials
-  tot_trials <- sapply(unique(data$subject), function(sbj)  length(unique(data[data$subject == sbj, "trial"])) ) %>% sum()
-  
-  #Create a variable trial  
-  trials <- rep(1:tot_trials, 
-                data %>% 
-                  group_by(subject, trial) %>% 
-                  summarise(n()) %>% .[, 3] %>% 
-                  unlist() %>% as.double())
-  return(trials)
+trials <- function(x){
+  idx <- c(0, which(diff(x)<0), length(x))
+  lapply(1: c(length(idx)-1), function(i){ 
+    tr_i <- tr[ (idx[i]+1) : idx[i+1]]
+    rep(1:length(unique(tr_i)), rle(tr_i)$lengths)
+  }) %>% unlist
 }
