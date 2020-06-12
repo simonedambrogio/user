@@ -8,10 +8,10 @@
 
 words_rm <- function (data, variable, words_to_rm, replace = "") {
   
-  library(tidyverse)
-  if (!require(tidyverse)) {
-    install.packages("tidyverse")
-    library(tidyverse)
+  library(dplyr)
+  if (!require(dplyr)) {
+    install.packages("dplyr")
+    library(dplyr)
   }
   
   
