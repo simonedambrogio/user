@@ -18,16 +18,14 @@ words_rm <- function (data, variable, words_to_rm, replace = "") {
   variable <- enquo(variable)
   var <- select(data, !!variable) %>% .[,]
   
-  new_var <- vector(length = length(data))
-  
   for (word_i in 1:length(words_to_rm)) {
     word_to_rm_logic <- str_detect(var, words_to_rm[word_i])
     word_to_rm <- words_to_rm[word_i]
     new_words <- sapply(1:sum(word_to_rm_logic), function(i) var[word_to_rm_logic][i] <- gsub(word_to_rm, replace, var[word_to_rm_logic][i]))
-    new_var[word_to_rm_logic] <- new_words
+    var[word_to_rm_logic] <- new_words
   }
   
-  return(new_var)
+  return(var)
 }
 
 
