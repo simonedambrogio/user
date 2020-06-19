@@ -20,9 +20,9 @@ words_rm <- function (data, variable, words_to_rm, replace = "") {
   if(!is.character(var)) var <- as.character(var)
   
   for (word_i in 1:length(words_to_rm)) {
-    word_to_rm_logic <- str_detect(var, words_to_rm[word_i])
+    word_to_rm_logic <- str_detect(var, fixed(words_to_rm[word_i]))
     word_to_rm <- words_to_rm[word_i]
-    new_words <- sapply(1:sum(word_to_rm_logic), function(i) var[word_to_rm_logic][i] <- gsub(word_to_rm, replace, var[word_to_rm_logic][i]))
+    new_words <- sapply(1:sum(word_to_rm_logic), function(i) var[word_to_rm_logic][i] <- gsub(word_to_rm, replace, var[word_to_rm_logic][i], fixed = TRUE))
     var[word_to_rm_logic] <- new_words
   }
   
