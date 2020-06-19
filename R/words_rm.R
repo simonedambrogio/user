@@ -14,9 +14,10 @@ words_rm <- function (data, variable, words_to_rm, replace = "") {
     library(dplyr)
   }
   
-  
   variable <- enquo(variable)
   var <- select(data, !!variable) %>% .[,]
+  
+  if(!is.character(var)) var <- as.character(var)
   
   for (word_i in 1:length(words_to_rm)) {
     word_to_rm_logic <- str_detect(var, words_to_rm[word_i])
