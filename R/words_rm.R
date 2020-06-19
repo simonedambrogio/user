@@ -6,7 +6,7 @@
 #replace: numbers or words we want instead of words_rm. Default is "" and you should 
 #keep it if you want to eliminate the words
 
-words_rm <- function (data, variable, words_to_rm, replace = "") {
+words_replace <- function (data, variable, words_to_replace, replace_with = "") {
   
   library(dplyr)
   if (!require(dplyr)) {
@@ -21,9 +21,14 @@ words_rm <- function (data, variable, words_to_rm, replace = "") {
   
   for (word_i in 1:length(words_to_rm)) {
     word_to_rm_logic <- str_detect(var, fixed(words_to_rm[word_i]))
-    word_to_rm <- words_to_rm[word_i]
-    new_words <- sapply(1:sum(word_to_rm_logic), function(i) var[word_to_rm_logic][i] <- gsub(word_to_rm, replace, var[word_to_rm_logic][i], fixed = TRUE))
-    var[word_to_rm_logic] <- new_words
+    
+    if(any(word_to_rm_logic)) {
+      word_to_rm <- words_to_rm[word_i]
+      new_words <- sapply(1:sum(word_to_rm_logic), function(i) var[word_to_rm_logic][i] <- gsub(word_to_rm, replace, var[word_to_rm_logic][i], fixed = TRUE))
+      var[word_to_rm_logic] <- new_words
+    } else {
+      warning( paste0("Sting '",  words_to_replace ,"' not found") )
+    }
   }
   
   return(var)
