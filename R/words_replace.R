@@ -16,21 +16,19 @@ words_replace <- function (data, variable, words_to_replace, replace_with = "") 
   }
   
   variable <- enquo(variable)
-  var <- select(data, !!variable) %>% .[,] %>% na.omit()
+  var <- select(data, !!variable) %>% .[,]
   
   if(!is.character(var)) var <- as.character(var)
   
   for (word_i in 1:length(words_to_replace)) {
-    word_to_rm_logic <- str_detect(var, fixed(words_to_replace[word_i]))
+    word_to_rm_index <- which(str_detect(var, fixed(words_to_replace[word_i])))
     
-    if(any(word_to_rm_logic)) {
+    if(any(word_to_rm_index)) {
       words_to_replace_i <- words_to_replace[word_i]
-      
-      new_words <- sapply(1:sum(word_to_rm_logic, na.rm = TRUE), function(i){
-        var[word_to_rm_logic][i] <- gsub(words_to_replace_i, replace_with, var[word_to_rm_logic][i], fixed = TRUE)
+      new_words <- sapply(seq_along(word_to_rm_index), function(i){
+        var[word_to_rm_index][i] <- gsub(words_to_replace_i, replace_with, var[word_to_rm_index][i], fixed = TRUE)
       })
-      
-      var[word_to_rm_logic] <- new_words
+      var[word_to_rm_index] <- new_words
     } else {
       warning( paste0("Sting '",  words_to_replace ,"' not found") )
     }
