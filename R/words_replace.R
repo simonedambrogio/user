@@ -16,7 +16,7 @@ words_replace <- function (data, variable, words_to_replace, replace_with = "") 
   }
   
   variable <- enquo(variable)
-  var <- select(data, !!variable) %>% .[,]
+  var <- select(data, !!variable) %>% .[,] %>% na.omit()
   
   if(!is.character(var)) var <- as.character(var)
   
