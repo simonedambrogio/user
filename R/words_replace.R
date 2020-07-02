@@ -26,7 +26,7 @@ words_replace <- function (data, variable, words_to_replace, replace_with = "") 
     if(any(word_to_rm_logic)) {
       words_to_replace_i <- words_to_replace[word_i]
       
-      new_words <- sapply(1:sum(word_to_rm_logic), function(i){
+      new_words <- sapply(1:sum(word_to_rm_logic, na.rm = TRUE), function(i){
         var[word_to_rm_logic][i] <- gsub(words_to_replace_i, replace_with, var[word_to_rm_logic][i], fixed = TRUE)
       })
       
