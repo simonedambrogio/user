@@ -6,7 +6,7 @@
 #replace_with: numbers or words we want instead of words_rm. Default is "" and you should 
 #keep it if you want to eliminate the words
 
-words_replace <- function (data, variable, words_to_replace, replace_with = "") {
+words_replace <- function (variable, words_to_replace, replace_with = "") {
   
   
   library(dplyr)
